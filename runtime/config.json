@@ -1,1 +1,37 @@
-{ }
+{
+    "canvas": {
+        "width": 800,
+        "height": 500,
+        "image": "floor.png"
+    },
+    "spots": [
+        {
+            "id": "s01",
+            "rect": [
+                100,
+                80,
+                250,
+                180
+            ],
+            "menu": [
+                {
+                    "title": "カテゴリA",
+                    "children": [
+                        {
+                            "title": "A-1",
+                            "url": "https://example.com/a1"
+                        },
+                        {
+                            "title": "A-2",
+                            "url": "https://example.com/a2"
+                        }
+                    ]
+                },
+                {
+                    "title": "単独リンクB",
+                    "url": "https://example.com/b"
+                }
+            ]
+        }
+    ]
+}
