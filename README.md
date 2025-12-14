@@ -1,108 +1,169 @@
-# ImageMap Menu Editor
+# Image Map Quadrilateral Editor & Viewer
 
-This repository contains a complete system for creating HTML image-map–based
-popup menus using a fixed HTML/JS runtime and a JSON configuration file.
+このプロジェクトは、四角形のホットスポットと階層メニューを持つインタラクティブなイメージマップを作成するためのWebベースの**エディター**と、それを表示するための軽量な**ビューアー**の2つの主要コンポーネントで構成されています。
 
-It includes:
-
-- **Runtime** (HTML/JS/CSS) — Fixed, does not change  
-- **GUI Editor** (React + Vite + TypeScript) — Creates `config.json` visually  
-- **JSON Schema** — Validates `config.json`
-
-The goal is to allow non-developers to maintain clickable image maps with
-hierarchical popup menus simply by editing JSON using a GUI, while keeping
-runtime HTML and JS fully static.
+This project consists of two main components: a web-based **Editor** for creating interactive image maps with quadrilateral hotspots and hierarchical menus, and a lightweight **Viewer** for displaying them.
 
 ---
 
-## 📁 Repository Structure
+# 日本語 (Japanese)
 
-imagemap-menu-editor/
-├── README.md
-├── schema/
-│ └── config.schema.json
-├── editor/ ← GUI Editor (React)
-│ ├── index.html
-│ ├── package.json
-│ ├── tsconfig.json
-│ ├── vite.config.ts
-│ └── src/
-│ ├── main.tsx
-│ ├── App.tsx
-│ ├── components/
-│ │ ├── CanvasEditor.tsx
-│ │ ├── SpotList.tsx
-│ │ ├── SpotProperties.tsx
-│ │ ├── MenuEditor.tsx
-│ │ └── MenuTree.tsx
-│ ├── hooks/
-│ │ └── useEditorState.ts
-│ └── types.ts
-└── runtime/ ← Final embeddable HTML/JS
-├── index.html
-├── style.css
-├── menu.js
-├── floor.png
-└── config.json
+## ディレクトリ構成
 
----
+-   `editor/`: Reactベースのエディターアプリケーション。
+-   `viewer/`: スタンドアロンのHTML/CSS/JSビューアー。
+-   `release/`: エディターとビューアーの両方のビルド済み静的ファイルが含まれています（ビルドにより生成）。
 
-## 🧾 config.json spec
+## 1. イメージマップエディター (`editor/`)
 
-`config.json` defines:
+イメージマップを作成・編集するためのReactアプリケーションです。
 
-- Canvas (image, width, height)
-- List of hotspots (rectangles)
-- For each hotspot, a tree-structured menu
-- Menus can be:
-  - Parent (title + children)
-  - Child (title + url)
-  - Single (title + url, no children)
+### 機能
+-   **ホットスポット操作**:
+    -   **四角形シェイプ**: ホットスポットを（単なる長方形ではなく）任意の4つの座標点で定義します。
+    -   **作成**: キャンバス上をドラッグして新しいホットスポットを作成します。
+    -   **編集**: サイドハンドルを使ってリサイズするか、個々のコーナーハンドルをドラッグして形状を変形させます。
+    -   **管理**: 移動、削除、および全ホットスポットのリスト表示。
+-   **プロパティ**:
+    -   **タイプ**: "リンク"と"フォルダ"を切り替えます。
+    -   **リンク**: URLとツールチップを設定します。
+    -   **フォルダ**: 階層的なメニュー構造（ネストされたリンクとフォルダ）を作成します。
+-   **データ**:
+    -   **JSON設定**: マップデータ（ホットスポット、リンク、メニュー）をJSONとしてインポートおよびエクスポートします。
+    -   **自動ロード**: 起動時に`data.json`とデフォルト画像を自動的に読み込みます。
 
----
+### 使い方
+1.  **開始**: エディターは`public/`に存在する場合、自動的に`data.json`とデフォルト画像を読み込みます。
+2.  **画像アップロード**: "Choose File"をクリックしてカスタム画像を読み込みます。
+3.  **描画**: 画像上をドラッグして新しいホットスポットを作成します。
+4.  **形状編集**: ホットスポットの個々の角をドラッグして、不規則な四角形を作成します。
+5.  **プロパティ**: ホットスポットを選択して設定します:
+    -   **リンク**: URLとツールチップを設定します。
+    -   **フォルダ**: ネストされたメニュー構造を作成します。
+6.  **エクスポート**: "Export JSON"をクリックして設定を保存します。
 
-## 🧰 GUI Editor (React)
+### 開発
+1.  エディターディレクトリに移動: `cd editor`
+2.  依存関係をインストール: `npm install`
+3.  開発サーバーを起動: `npm run dev`
 
-Located in `/editor/`
+## 2. イメージマップビューアー (`viewer/`)
 
-Features:
+エクスポートされたイメージマップをレンダリングするバニラHTML/JSページです。
 
-- Load background image  
-- Draw rectangular hotspots  
-- Edit spot ID and coordinates  
-- Create menu trees (parent, child, single)  
-- Validate JSON using AJV and schema  
-- Export config.json  
+### 機能
+-   **レンダリング**:
+    -   **SVGオーバーレイ**: JSONデータからSVGを使用してホットスポットとメニューを動的にレンダリングします。
+    -   **固定キャンバス**: キャンバスサイズはJSON設定に基づいて固定されます。
+-   **インタラクション**:
+    -   **ハイライト**: マウスオーバーでホットスポットがハイライトされます。
+    -   **メニュー**: "フォルダ"タイプのホットスポットは、ホットスポットの中央にメニューを表示します。
+    -   **自動クローズ**: マウスがホットスポット/メニューエリアから外れるとメニューが消えます。
+    -   **ネストナビゲーション**: フォルダ項目にホバーするとサブメニューが表示されます。
+    -   **自動幅調整**: メニューの幅は、最も長いラベルに合わせて自動的に調整されます。
+    -   **リンク**: すべてのリンクは新しいタブで開きます (`target="_blank"`)。
 
-Start development server:
+### 使い方
+1.  画像と`imagemap.json`（`data.json`にリネーム）を`viewer/`ディレクトリに配置します。
+2.  Webブラウザで`index.html`を開きます。
+3.  **インタラクション**:
+    -   ホットスポットにホバーしてハイライトします。
+    -   "フォルダ"ホットスポットにホバーしてメニューを表示します。
+    -   ネストされたサブメニューをナビゲートします。
+    -   リンクをクリックして新しいタブで開きます。
 
-cd editor
-npm install
-npm run dev
+## 3. 静的リリース (`release/`)
 
----
+`release`ディレクトリには、本番用の静的ファイルが含まれています。
 
-## 🚀 Runtime
+-   **`release/editor`**: ビルド済みのエディターアプリ。任意の静的ホスティングサービスにアップロードできます。
+-   **`release/viewer`**: ビューアーアプリ。任意の静的ホスティングサービスにアップロードできます。
 
-Located in `/runtime/`.
-
-This is the actual HTML/JS that you deploy.  
-It reads `config.json` and displays popup menus on image hotspots.
-
-No framework required. No build step.  
-
-To use:
-
-index.html
-menu.js
-style.css
-floor.png
-config.json
-
-Place them on any web server.
+### リリースの再ビルド
+リリースファイルを再ビルドするには:
+1.  `editor/`に移動します。
+2.  `npm run build`を実行します。
+3.  `editor/dist`を`release/editor`にコピーします。
+4.  `viewer`の内容を`release/viewer`にコピーします。
 
 ---
 
-## 📄 License
+# English
 
-MIT (or change as needed)
+## Directory Structure
+
+-   `editor/`: The React-based editor application.
+-   `viewer/`: The standalone HTML/CSS/JS viewer.
+-   `release/`: Contains the built static files for both the Editor and Viewer (generated by build).
+
+## 1. Image Map Editor (`editor/`)
+
+A React application for creating and editing image maps.
+
+### Features
+-   **Hotspot Manipulation**:
+    -   **Quadrilateral Shapes**: Define hotspots using 4 arbitrary coordinate points (not just rectangles).
+    -   **Creation**: Drag on the canvas to create a new hotspot.
+    -   **Editing**: Resize using side handles, or deform the shape by dragging individual corner handles.
+    -   **Management**: Move, delete, and view a list of all hotspots.
+-   **Properties**:
+    -   **Types**: Switch between "Link" and "Folder".
+    -   **Link**: Configure URL and Tooltip.
+    -   **Folder**: Create hierarchical menu structures (nested links and folders).
+-   **Data**:
+    -   **JSON Configuration**: Import and export map data (hotspots, links, menus) as JSON.
+    -   **Auto-Load**: Automatically loads default configuration and image from `data.json` on startup.
+
+### Usage
+1.  **Start**: The editor automatically loads `data.json` and the default image if present in `public/`.
+2.  **Upload Image**: Click "Choose File" to load a custom image.
+3.  **Draw**: Click and drag on the image to create a new hotspot.
+4.  **Edit Shape**: Drag the individual corners of a hotspot to create irregular quadrilateral shapes.
+5.  **Properties**: Select a hotspot to configure:
+    -   **Link**: Set a URL and tooltip.
+    -   **Folder**: Create a nested menu structure.
+6.  **Export**: Click "Export JSON" to save your configuration.
+
+### Development
+1.  Navigate to the editor directory: `cd editor`
+2.  Install dependencies: `npm install`
+3.  Start the dev server: `npm run dev`
+
+## 2. Image Map Viewer (`viewer/`)
+
+A vanilla HTML/JS page that renders the exported image map.
+
+### Features
+-   **Rendering**:
+    -   **SVG Overlay**: Renders hotspots and menus dynamically from JSON data using SVG.
+    -   **Fixed Canvas**: Canvas size is fixed based on the JSON configuration.
+-   **Interaction**:
+    -   **Highlight**: Hotspots highlight on mouseover.
+    -   **Menus**: "Folder" hotspots display a menu centered on the hotspot.
+    -   **Auto-Close**: Menus disappear when the mouse leaves the hotspot/menu area.
+    -   **Nested Navigation**: Submenus appear when hovering over folder items.
+    -   **Auto-Width**: Menu width adjusts automatically to fit the longest label.
+    -   **Links**: All links open in a new tab (`target="_blank"`).
+
+### Usage
+1.  Place your image and `imagemap.json` (renamed to `data.json`) in the `viewer/` directory.
+2.  Open `index.html` in a web browser.
+3.  **Interaction**:
+    -   Hover over hotspots to highlight them.
+    -   Hover over "Folder" hotspots to reveal the menu.
+    -   Navigate through nested submenus.
+    -   Click links to open them in a new tab.
+
+## 3. Static Release (`release/`)
+
+The `release` directory contains the production-ready static files.
+
+-   **`release/editor`**: The built Editor app. Upload this folder to any static hosting service.
+-   **`release/viewer`**: The Viewer app. Upload this folder to any static hosting service.
+
+### Rebuilding the Release
+To rebuild the release files:
+1.  Go to `editor/`.
+2.  Run `npm run build`.
+3.  Copy `editor/dist` to `release/editor`.
+4.  Copy `viewer` contents to `release/viewer`.

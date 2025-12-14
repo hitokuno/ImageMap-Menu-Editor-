@@ -1,0 +1,80 @@
+{
+  "imageUrl": "./aizuwakamatu_sweets.jpg",
+  "canvas": {
+    "width": 950,
+    "height": 964
+  },
+  "hotspots": [
+    {
+      "id": "6e210d3b-7fdd-4984-a0e0-f522cb10f7fe",
+      "points": [
+        {
+          "x": 101,
+          "y": 258.703125
+        },
+        {
+          "x": 438,
+          "y": 195.703125
+        },
+        {
+          "x": 478,
+          "y": 378.703125
+        },
+        {
+          "x": 135,
+          "y": 444.703125
+        }
+      ],
+      "type": "folder",
+      "props": {
+        "tooltip": "まち歩き",
+        "items": [
+          {
+            "id": "9e1a2a94-29ea-40a9-9a47-c9c9dfb23904",
+            "label": "市役所",
+            "url": "https://www.city.aizuwakamatsu.fukushima.jp",
+            "children": []
+          },
+          {
+            "id": "e1d85075-49d0-4c74-b12e-a2041acf10e9",
+            "label": "色々な場所",
+            "url": "",
+            "children": [
+              {
+                "id": "b8b5b796-a442-4f3b-99e2-250c0995fd09",
+                "label": "やまでら茶屋",
+                "url": "https://www.fukulabo.net/shop/shop.shtml?s=9354",
+                "children": []
+              },
+              {
+                "id": "01677cc0-3a83-44c9-a58c-5d0a66299f84",
+                "label": "あかべこカフェ✖️Dolce",
+                "url": "http://okitamaco.blog.fc2.com/blog-entry-5001.html",
+                "children": []
+              },
+              {
+                "id": "0c237d41-7bde-4c0c-bb50-c3792c20291f",
+                "label": "孫項目",
+                "url": "",
+                "children": [
+                  {
+                    "id": "61f47015-58f7-4e60-aa46-8dd056584306",
+                    "label": "やまでら茶屋",
+                    "url": "https://www.fukulabo.net/shop/shop.shtml?s=9354",
+                    "children": []
+                  },
+                  {
+                    "id": "7cf364e9-e16c-457a-99d3-f7d9c269d253",
+                    "label": "あかべこカフェ✖️Dolce",
+                    "url": "http://okitamaco.blog.fc2.com/blog-entry-5001.html",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
