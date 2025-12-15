@@ -9,6 +9,7 @@ function App() {
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
   const [hotspots, setHotspots] = useState([]);
   const [selectedHotspotId, setSelectedHotspotId] = useState(null);
+  const [imageName, setImageName] = useState('');
 
   useEffect(() => {
     fetch('data.json')
@@ -18,6 +19,7 @@ function App() {
         if (data.hotspots) setHotspots(data.hotspots);
         if (data.imageUrl) {
           setImage(data.imageUrl);
+          setImageName(data.imageUrl);
           // Optionally pre-load to get dimensions if not in canvas
           const img = new Image();
           img.onload = () => {
@@ -34,6 +36,7 @@ function App() {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setImageName(file.name);
       const reader = new FileReader();
       reader.onload = (event) => {
         const img = new Image();
@@ -83,6 +86,7 @@ function App() {
 
   const handleExport = () => {
     const data = {
+      imageUrl: imageName,
       canvas: canvasSize,
       hotspots
     };
@@ -103,6 +107,7 @@ function App() {
           const data = JSON.parse(event.target.result);
           if (data.canvas) setCanvasSize(data.canvas);
           if (data.hotspots) setHotspots(data.hotspots);
+          if (data.imageUrl) setImageName(data.imageUrl);
           // Note: Image needs to be re-uploaded or we need to store image data in JSON (heavy).
           // For now, we assume user re-uploads image or we just load hotspots.
           // If the JSON contains image data (base64), we can load it.
@@ -123,6 +128,16 @@ function App() {
         <div>
           <label style={{ marginRight: 10 }}>Image:</label>
           <input type="file" accept="image/*" onChange={handleImageUpload} />
+        </div>
+        <div>
+          <label style={{ marginRight: 10 }}>Image URL:</label>
+          <input
+            type="text"
+            value={imageName}
+            onChange={(e) => setImageName(e.target.value)}
+            placeholder="e.g. images/map.jpg"
+            style={{ width: 200 }}
+          />
         </div>
         <div>
           <label style={{ marginRight: 10 }}>Import JSON:</label>

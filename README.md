@@ -49,7 +49,7 @@ This project consists of two main components: a web-based **Editor** for creatin
 
 ## 2. イメージマップビューアー (`viewer/`)
 
-エクスポートされたイメージマップをレンダリングするバニラHTML/JSページです。
+エクスポートされたイメージマップをレンダリングするIE11対応バニラHTML/JSページです。
 
 ### 機能
 -   **レンダリング**:
@@ -131,7 +131,7 @@ A React application for creating and editing image maps.
 
 ## 2. Image Map Viewer (`viewer/`)
 
-A vanilla HTML/JS page that renders the exported image map.
+A vanilla HTML/JS page, IE11 compatible, that renders the exported image map.
 
 ### Features
 -   **Rendering**:
