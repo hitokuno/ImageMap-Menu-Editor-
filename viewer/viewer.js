@@ -1,25 +1,36 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('image-map-container');
+document.addEventListener('DOMContentLoaded', function() {
+    var container = document.getElementById('image-map-container');
 
-    // Load configuration
-    fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
-            renderImageMap(data, container);
-        })
-        .catch(error => console.error('Error loading map data:', error));
+    // Load configuration using XMLHttpRequest for IE11
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'data.json', true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                try {
+                    var data = JSON.parse(xhr.responseText);
+                    renderImageMap(data, container);
+                } catch (e) {
+                    console.error('Error parsing JSON:', e);
+                }
+            } else {
+                console.error('Error loading map data:', xhr.statusText);
+            }
+        }
+    };
+    xhr.send();
 });
 
 function renderImageMap(data, container) {
     // 1. Render Image
-    const img = document.createElement('img');
+    var img = document.createElement('img');
     img.src = data.imageUrl || 'https://placehold.co/800x600';
     img.width = data.canvas.width;
     img.height = data.canvas.height;
     container.appendChild(img);
 
     // 2. Render SVG Overlay
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute('width', data.canvas.width);
     svg.setAttribute('height', data.canvas.height);
     svg.style.position = 'absolute';
@@ -29,16 +40,21 @@ function renderImageMap(data, container) {
     container.appendChild(svg);
 
     // 3. Render Hotspots
-    data.hotspots.forEach(hotspot => {
-        const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    data.hotspots.forEach(function(hotspot) {
+        var polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
 
         // Handle both old rect format (for backward compat if needed) and new points format
-        let pointsStr = "";
+        var pointsStr = "";
         if (hotspot.points) {
-            pointsStr = hotspot.points.map(p => `${p.x},${p.y}`).join(' ');
+            pointsStr = hotspot.points.map(function(p) {
+                return p.x + ',' + p.y;
+            }).join(' ');
         } else if (hotspot.rect) {
-            const { x, y, w, h } = hotspot.rect;
-            pointsStr = `${x},${y} ${x + w},${y} ${x + w},${y + h} ${x},${y + h}`;
+            var x = hotspot.rect.x;
+            var y = hotspot.rect.y;
+            var w = hotspot.rect.w;
+            var h = hotspot.rect.h;
+            pointsStr = x + ',' + y + ' ' + (x + w) + ',' + y + ' ' + (x + w) + ',' + (y + h) + ' ' + x + ',' + (y + h);
         }
 
         polygon.setAttribute('points', pointsStr);
@@ -48,44 +64,41 @@ function renderImageMap(data, container) {
         polygon.style.cursor = 'pointer';
 
         if (hotspot.props.tooltip) {
-            const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+            var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
             title.textContent = hotspot.props.tooltip;
             polygon.appendChild(title);
         }
 
         // Attach event listeners
         if (hotspot.type === 'link') {
-            polygon.addEventListener('click', () => {
+            polygon.addEventListener('click', function() {
                 window.open(hotspot.props.url, '_blank');
             });
         } else if (hotspot.type === 'folder') {
-            const menu = createMenu(hotspot.props.items);
+            var menu = createMenu(hotspot.props.items);
             menu.classList.add('hotspot-menu');
             container.appendChild(menu);
 
-            let timeout;
-            const cancelHide = () => clearTimeout(timeout);
+            var timeout;
+            var cancelHide = function() { clearTimeout(timeout); };
 
-            const show = () => {
+            var show = function() {
                 cancelHide(); // Cancel any pending hide (e.g. from leaving menu back to hotspot)
-                const bbox = polygon.getBBox();
-                const centerX = bbox.x + bbox.width / 2;
-                const centerY = bbox.y + bbox.height / 2;
+                var bbox = polygon.getBBox();
+                var centerX = bbox.x + bbox.width / 2;
+                var centerY = bbox.y + bbox.height / 2;
 
                 menu.classList.add('visible');
                 polygon.classList.add('active'); // Keep highlight
 
                 // Center the menu
-                // We need menu dimensions to center it perfectly.
-                // Since it's display:none, we might need to show it first or use visibility:hidden.
-                // But 'visible' class makes it block.
-                const menuRect = menu.getBoundingClientRect();
-                menu.style.left = `${centerX - menuRect.width / 2}px`;
-                menu.style.top = `${centerY - menuRect.height / 2}px`;
+                var menuRect = menu.getBoundingClientRect();
+                menu.style.left = (centerX - menuRect.width / 2) + 'px';
+                menu.style.top = (centerY - menuRect.height / 2) + 'px';
             };
 
-            const hide = () => {
-                timeout = setTimeout(() => {
+            var hide = function() {
+                timeout = setTimeout(function() {
                     menu.classList.remove('visible');
                     polygon.classList.remove('active');
                 }, 100); // Short timeout to allow moving to menu
@@ -95,11 +108,11 @@ function renderImageMap(data, container) {
             polygon.addEventListener('mouseleave', hide);
 
             // Keep menu open if hovering over it
-            menu.addEventListener('mouseenter', () => {
+            menu.addEventListener('mouseenter', function() {
                 cancelHide();
                 polygon.classList.add('active');
             });
-            menu.addEventListener('mouseleave', () => {
+            menu.addEventListener('mouseleave', function() {
                 hide();
             });
         }
@@ -109,15 +122,15 @@ function renderImageMap(data, container) {
 }
 
 function createMenu(items) {
-    const list = document.createElement('ul');
+    var list = document.createElement('ul');
     list.style.listStyle = 'none';
     list.style.margin = '0';
     list.style.padding = '0';
 
-    items.forEach(item => {
-        const li = document.createElement('li');
+    items.forEach(function(item) {
+        var li = document.createElement('li');
 
-        const a = document.createElement('a');
+        var a = document.createElement('a');
         a.className = 'menu-item';
         a.textContent = item.label;
 
@@ -132,21 +145,20 @@ function createMenu(items) {
 
         if (item.children && item.children.length > 0) {
             a.classList.add('has-submenu');
-            const subMenu = createMenu(item.children);
+            var subMenu = createMenu(item.children);
             subMenu.classList.add('submenu');
             li.appendChild(subMenu);
 
             // JS-based parent highlighting to ensure precision
-            subMenu.addEventListener('mouseenter', () => {
+            subMenu.addEventListener('mouseenter', function() {
                 a.classList.add('highlighted');
             });
-            subMenu.addEventListener('mouseleave', () => {
+            subMenu.addEventListener('mouseleave', function() {
                 a.classList.remove('highlighted');
             });
 
             // Safety: Ensure highlight is removed when leaving the parent li
-            // This handles cases where the submenu might disappear (display:none) before its mouseleave fires
-            li.addEventListener('mouseleave', () => {
+            li.addEventListener('mouseleave', function() {
                 a.classList.remove('highlighted');
             });
         }
