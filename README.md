@@ -72,19 +72,12 @@ This project consists of two main components: a web-based **Editor** for creatin
     -   ネストされたサブメニューをナビゲートします。
     -   リンクをクリックして新しいタブで開きます。
 
-## 3. 静的リリース (`release/`)
-
-`release`ディレクトリには、本番用の静的ファイルが含まれています。
-
--   **`release/editor`**: ビルド済みのエディターアプリ。任意の静的ホスティングサービスにアップロードできます。
--   **`release/viewer`**: ビューアーアプリ。任意の静的ホスティングサービスにアップロードできます。
-
 ### リリースの再ビルド
 リリースファイルを再ビルドするには:
 1.  `editor/`に移動します。
 2.  `npm run build`を実行します。
-3.  `editor/dist`を`release/editor`にコピーします。
-4.  `viewer`の内容を`release/viewer`にコピーします。
+3.  `editor/dist`を任意の静的ホスティングサービスにアップロードできます。
+4.  `viewer`の内容を任意の静的ホスティングサービスにアップロードできます。
 
 ---
 
@@ -154,16 +147,9 @@ A vanilla HTML/JS page, IE11 compatible, that renders the exported image map.
     -   Navigate through nested submenus.
     -   Click links to open them in a new tab.
 
-## 3. Static Release (`release/`)
-
-The `release` directory contains the production-ready static files.
-
--   **`release/editor`**: The built Editor app. Upload this folder to any static hosting service.
--   **`release/viewer`**: The Viewer app. Upload this folder to any static hosting service.
-
 ### Rebuilding the Release
 To rebuild the release files:
 1.  Go to `editor/`.
 2.  Run `npm run build`.
-3.  Copy `editor/dist` to `release/editor`.
-4.  Copy `viewer` contents to `release/viewer`.
+3.  Copy `editor/dist` to any static hosting service..
+4.  Copy `viewer` contents to any static hosting service..
