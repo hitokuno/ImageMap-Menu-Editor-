@@ -91,10 +91,9 @@ function renderImageMap(data, container) {
                 menu.classList.add('visible');
                 addClass(polygon, 'active'); // Keep highlight
 
-                // Center the menu
-                var menuRect = menu.getBoundingClientRect();
-                menu.style.left = (centerX - menuRect.width / 2) + 'px';
-                menu.style.top = (centerY - menuRect.height / 2) + 'px';
+                // Position the menu: Top-left corner at the center of the hotspot
+                menu.style.left = centerX + 'px';
+                menu.style.top = centerY + 'px';
             };
 
             var hide = function () {
