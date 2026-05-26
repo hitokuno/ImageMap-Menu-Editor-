@@ -12,7 +12,7 @@ function App() {
   const [imageName, setImageName] = useState('');
 
   useEffect(() => {
-    fetch('data.json')
+    fetch('data.json?t=' + Date.now())
       .then(res => res.json())
       .then(data => {
         if (data.canvas) setCanvasSize(data.canvas);

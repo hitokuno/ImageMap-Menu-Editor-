@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load configuration using XMLHttpRequest for IE11
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'data.json', true);
+    xhr.open('GET', 'data.json?t=' + new Date().getTime(), true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
