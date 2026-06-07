@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function Hotspot({ data, isSelected, onSelect, onUpdate, containerSize }) {
+function Hotspot({ data, isSelected, onSelect, onUpdate, containerSize, onMouseEnter, onMouseMove, onMouseLeave }) {
     const { points } = data;
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -80,6 +80,9 @@ function Hotspot({ data, isSelected, onSelect, onUpdate, containerSize }) {
                 strokeWidth="2"
                 cursor="move"
                 onMouseDown={handleMouseDown}
+                onMouseEnter={(e) => onMouseEnter && onMouseEnter(e, data.props.tooltip)}
+                onMouseMove={onMouseMove}
+                onMouseLeave={onMouseLeave}
             />
 
             {isSelected && points.map((p, i) => (

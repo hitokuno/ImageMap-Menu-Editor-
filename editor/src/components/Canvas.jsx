@@ -6,6 +6,8 @@ function Canvas({ image, width, height, hotspots, selectedHotspotId, onAddHotspo
     const [isDrawing, setIsDrawing] = useState(false);
     const [startPos, setStartPos] = useState({ x: 0, y: 0 });
     const [currentRect, setCurrentRect] = useState(null);
+    const [hoveredTooltip, setHoveredTooltip] = useState(null);
+    const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
     const getMousePos = (e) => {
         const rect = containerRef.current.getBoundingClientRect();
@@ -25,6 +27,7 @@ function Canvas({ image, width, height, hotspots, selectedHotspotId, onAddHotspo
         setStartPos(pos);
         setCurrentRect({ x: pos.x, y: pos.y, w: 0, h: 0 });
         onSelectHotspot(null); // Deselect when starting to draw
+        setHoveredTooltip(null); // Clear tooltip
     };
 
     const handleMouseMove = (e) => {
@@ -48,6 +51,36 @@ function Canvas({ image, width, height, hotspots, selectedHotspotId, onAddHotspo
             onAddHotspot(currentRect);
         }
         setCurrentRect(null);
+    };
+
+    const isTooltipEmpty = (html) => {
+        if (!html) return true;
+        const clean = html.replace(/<[^>]*>|&nbsp;/gi, '').trim();
+        return clean === '';
+    };
+
+    const handleHotspotMouseEnter = (e, tooltip) => {
+        if (isDrawing || isTooltipEmpty(tooltip)) return;
+        setHoveredTooltip(tooltip);
+        updateTooltipPos(e);
+    };
+
+    const handleHotspotMouseMove = (e) => {
+        if (!hoveredTooltip) return;
+        updateTooltipPos(e);
+    };
+
+    const handleHotspotMouseLeave = () => {
+        setHoveredTooltip(null);
+    };
+
+    const updateTooltipPos = (e) => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        setTooltipPos({
+            x: e.clientX - rect.left + 15,
+            y: e.clientY - rect.top + 15
+        });
     };
 
     return (
@@ -89,6 +122,9 @@ function Canvas({ image, width, height, hotspots, selectedHotspotId, onAddHotspo
                         onSelect={() => onSelectHotspot(h.id)}
                         onUpdate={(updates) => onUpdateHotspot(h.id, updates)}
                         containerSize={{ width, height }}
+                        onMouseEnter={handleHotspotMouseEnter}
+                        onMouseMove={handleHotspotMouseMove}
+                        onMouseLeave={handleHotspotMouseLeave}
                     />
                 ))}
 
@@ -105,6 +141,20 @@ function Canvas({ image, width, height, hotspots, selectedHotspotId, onAddHotspo
                     />
                 )}
             </svg>
+
+            {hoveredTooltip && !isDrawing && (
+                <div
+                    className="hotspot-tooltip-preview"
+                    style={{
+                        position: 'absolute',
+                        left: tooltipPos.x,
+                        top: tooltipPos.y,
+                        pointerEvents: 'none',
+                        zIndex: 1000
+                    }}
+                    dangerouslySetInnerHTML={{ __html: hoveredTooltip }}
+                />
+            )}
         </div>
     );
 }

@@ -1,10 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Plus, Trash, ChevronRight, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import RichTextEditor from './RichTextEditor';
 
 function MenuEditor({ items, onChange }) {
     const addItem = () => {
-        onChange([...items, { id: uuidv4(), label: 'New Item', url: '', children: [] }]);
+        onChange([...items, { id: uuidv4(), label: 'New Item', url: '', tooltip: '', children: [] }]);
     };
 
     const updateItem = (index, updates) => {
@@ -69,6 +70,14 @@ function MenuItem({ item, onUpdate, onDelete }) {
                             onChange={(e) => onUpdate({ url: e.target.value })}
                             placeholder="https://..."
                             style={{ width: '100%' }}
+                        />
+                    </div>
+                    <div style={{ marginBottom: 10 }}>
+                        <label style={{ fontSize: 12 }}>Tooltip (optional)</label>
+                        <RichTextEditor
+                            value={item.tooltip || ''}
+                            onChange={(value) => onUpdate({ tooltip: value })}
+                            placeholder="Enter tooltip rich text..."
                         />
                     </div>
                     <div>

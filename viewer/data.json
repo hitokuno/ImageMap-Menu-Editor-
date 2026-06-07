@@ -33,7 +33,16 @@
             "id": "9e1a2a94-29ea-40a9-9a47-c9c9dfb23904",
             "label": "市役所",
             "url": "https://www.city.aizuwakamatsu.fukushima.jp",
-            "children": []
+            "children": [
+              {
+                "id": "2010ff99-7392-4f4c-af31-a28e3b48ee03",
+                "label": "市民課",
+                "url": "https://www.city.aizuwakamatsu.fukushima.jp",
+                "tooltip": "なんとかしてくれる",
+                "children": []
+              }
+            ],
+            "tooltip": "<i><u>市役所では</u></i><div><ul><li><i><u>申請</u></i></li></ul></div>"
           },
           {
             "id": "e1d85075-49d0-4c74-b12e-a2041acf10e9",

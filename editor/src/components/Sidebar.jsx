@@ -1,4 +1,5 @@
 import MenuEditor from './MenuEditor';
+import RichTextEditor from './RichTextEditor';
 
 function Sidebar({ hotspot, onUpdate, onDelete }) {
     if (!hotspot) {
@@ -41,11 +42,11 @@ function Sidebar({ hotspot, onUpdate, onDelete }) {
             </div>
 
             <div className="form-group">
-                <label>Tooltip</label>
-                <input
-                    type="text"
+                <label>Tooltip (Rich Text)</label>
+                <RichTextEditor
                     value={props.tooltip || ''}
-                    onChange={(e) => handleChange('tooltip', e.target.value)}
+                    onChange={(value) => handleChange('tooltip', value)}
+                    placeholder="Enter tooltip rich text..."
                 />
             </div>
 

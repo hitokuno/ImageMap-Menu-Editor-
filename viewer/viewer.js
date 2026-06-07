@@ -22,6 +22,28 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function renderImageMap(data, container) {
+    // Create custom tooltip element
+    var tooltip = document.createElement('div');
+    tooltip.className = 'hotspot-tooltip';
+    container.appendChild(tooltip);
+
+    // Tooltip position helper function
+    var positionTooltip = function (e) {
+        var rect = container.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+
+        // Offset from cursor to prevent blocking mouse events
+        tooltip.style.left = (x + 15) + 'px';
+        tooltip.style.top = (y + 15) + 'px';
+    };
+
+    var isTooltipEmpty = function (html) {
+        if (!html) return true;
+        var clean = html.replace(/<[^>]*>|&nbsp;/gi, '').trim();
+        return clean === '';
+    };
+
     // 1. Render Image
     var img = document.createElement('img');
     img.src = data.imageUrl || 'https://placehold.co/800x600';
@@ -63,10 +85,20 @@ function renderImageMap(data, container) {
         polygon.style.pointerEvents = 'all'; // Enable interaction
         polygon.style.cursor = 'pointer';
 
-        if (hotspot.props.tooltip) {
-            var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-            title.textContent = hotspot.props.tooltip;
-            polygon.appendChild(title);
+        if (hotspot.props.tooltip && !isTooltipEmpty(hotspot.props.tooltip)) {
+            polygon.addEventListener('mouseenter', function (e) {
+                tooltip.innerHTML = hotspot.props.tooltip;
+                tooltip.style.display = 'block';
+                positionTooltip(e);
+            });
+
+            polygon.addEventListener('mousemove', function (e) {
+                positionTooltip(e);
+            });
+
+            polygon.addEventListener('mouseleave', function () {
+                tooltip.style.display = 'none';
+            });
         }
 
         // Attach event listeners
@@ -75,7 +107,7 @@ function renderImageMap(data, container) {
                 window.open(hotspot.props.url, '_blank');
             });
         } else if (hotspot.type === 'folder') {
-            var menu = createMenu(hotspot.props.items);
+            var menu = createMenu(hotspot.props.items, tooltip, container);
             menu.classList.add('hotspot-menu');
             container.appendChild(menu);
 
@@ -120,11 +152,25 @@ function renderImageMap(data, container) {
     });
 }
 
-function createMenu(items) {
+function createMenu(items, tooltip, container) {
     var list = document.createElement('ul');
     list.style.listStyle = 'none';
     list.style.margin = '0';
     list.style.padding = '0';
+
+    var isTooltipEmpty = function (html) {
+        if (!html) return true;
+        var clean = html.replace(/<[^>]*>|&nbsp;/gi, '').trim();
+        return clean === '';
+    };
+
+    var positionTooltip = function (e) {
+        var rect = container.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        tooltip.style.left = (x + 15) + 'px';
+        tooltip.style.top = (y + 15) + 'px';
+    };
 
     items.forEach(function (item) {
         var li = document.createElement('li');
@@ -140,11 +186,27 @@ function createMenu(items) {
             a.href = '#';
         }
 
+        if (item.tooltip && !isTooltipEmpty(item.tooltip)) {
+            a.addEventListener('mouseenter', function (e) {
+                tooltip.innerHTML = item.tooltip;
+                tooltip.style.display = 'block';
+                positionTooltip(e);
+            });
+
+            a.addEventListener('mousemove', function (e) {
+                positionTooltip(e);
+            });
+
+            a.addEventListener('mouseleave', function () {
+                tooltip.style.display = 'none';
+            });
+        }
+
         li.appendChild(a);
 
         if (item.children && item.children.length > 0) {
             a.classList.add('has-submenu');
-            var subMenu = createMenu(item.children);
+            var subMenu = createMenu(item.children, tooltip, container);
             subMenu.classList.add('submenu');
             li.appendChild(subMenu);
 
