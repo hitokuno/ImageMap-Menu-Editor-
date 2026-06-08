@@ -13,21 +13,21 @@
           "y": 258.703125
         },
         {
-          "x": 438,
-          "y": 195.703125
+          "x": 183,
+          "y": 245.703125
         },
         {
-          "x": 478,
-          "y": 378.703125
+          "x": 201,
+          "y": 324.703125
         },
         {
-          "x": 135,
-          "y": 444.703125
+          "x": 122,
+          "y": 337.703125
         }
       ],
       "type": "folder",
       "props": {
-        "tooltip": "まち歩き",
+        "tooltip": "<h1>まち歩き</h1><div><ul><li>このプロジェクトは、四角形のホットスポットと階層メニューを持つインタラクティブなイメージマップを作成するためのWebベースのエディターと、それを表示するための軽量なビューアーの2つの主要コンポーネントで構成されています</li><li>This project consists of two main components: a web-based Editor for creating interactive image maps with quadrilateral hotspots and hierarchical menus, and a lightweight Viewer for displaying them</li></ul></div>",
         "items": [
           {
             "id": "9e1a2a94-29ea-40a9-9a47-c9c9dfb23904",
@@ -38,11 +38,11 @@
                 "id": "2010ff99-7392-4f4c-af31-a28e3b48ee03",
                 "label": "市民課",
                 "url": "https://www.city.aizuwakamatsu.fukushima.jp",
-                "tooltip": "なんとかしてくれる",
+                "tooltip": "なんとかしてくれる<div>市役所（区役所や町村役場）の中で、引越し、結婚、出生など、市民の生活に最も密接に関わる窓口業務を行う部署です。戸籍・住民票・マイナンバーなど、人生の節目に関わる手続きを主に担当しています。<br></div>",
                 "children": []
               }
             ],
-            "tooltip": "<i><u>市役所では</u></i><div><ul><li><i><u>申請</u></i></li></ul></div>"
+            "tooltip": "<i><u>市役所では</u></i><div><ul><li><i>申請</i></li><li><i>住民が暮らす市区町村のうち「市」において、行政サービスや地域のまちづくりを担う中核的な機関です。市民の生活に密着した戸籍・税金の手続きから、福祉、防災まで幅広い業務を行っています。<br></i></li></ul></div>"
           },
           {
             "id": "e1d85075-49d0-4c74-b12e-a2041acf10e9",

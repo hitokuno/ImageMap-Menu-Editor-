@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Bold, Italic, Underline, List, Eraser } from 'lucide-react';
 
-function RichTextEditor({ value, onChange, placeholder }) {
+function RichTextEditor({ value, onChange, placeholder, className = '' }) {
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ function RichTextEditor({ value, onChange, placeholder }) {
   };
 
   return (
-    <div className="rich-text-editor">
+    <div className={`rich-text-editor ${className}`.trim()}>
       <div className="rte-toolbar">
         <button
           type="button"

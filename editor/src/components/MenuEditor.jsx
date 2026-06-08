@@ -75,6 +75,7 @@ function MenuItem({ item, onUpdate, onDelete }) {
                     <div style={{ marginBottom: 10 }}>
                         <label style={{ fontSize: 12 }}>Tooltip (optional)</label>
                         <RichTextEditor
+                            className="tooltip-editor"
                             value={item.tooltip || ''}
                             onChange={(value) => onUpdate({ tooltip: value })}
                             placeholder="Enter tooltip rich text..."

@@ -89,7 +89,7 @@
 /* Custom Rich Text Tooltip */
 .hotspot-tooltip {
     position: absolute;
-    background: rgba(30, 30, 30, 0.95);
+    background: #3A3F46;
     color: #fff;
     padding: 10px 14px;
     border-radius: 8px;
@@ -101,9 +101,18 @@
     max-width: 250px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(8px);
-    display: none;
     text-align: left;
     word-wrap: break-word;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+.hotspot-tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .hotspot-tooltip h1,

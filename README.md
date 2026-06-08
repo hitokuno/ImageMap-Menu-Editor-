@@ -66,7 +66,7 @@ This project consists of two main components: a web-based **Editor** for creatin
     -   **IE11対応**: IE11で動作します。
 
 ### 使い方
-1.  画像と`imagemap.json`（`data.json`にリネーム）を`viewer/`ディレクトリに配置します。
+1.  画像と`data.json`を`viewer/`ディレクトリに配置します。
 2.  Webブラウザで`index.html`を開きます。
 3.  **インタラクション**:
     -   ホットスポットにホバーしてハイライトします。
@@ -78,7 +78,7 @@ This project consists of two main components: a web-based **Editor** for creatin
 リリースファイルを再ビルドするには:
 1.  `editor/`に移動します。
 2.  `npm run build`を実行します。
-3.  `editor/dist` が更新され、同時に `../release/editor/` と `../release/viewer/` が再生成されます。
+3.  `../release/editor/` にエディターの静的ファイルが直接出力され、同時に `../release/viewer/` が再生成されます。
 4.  配備には `release/` 配下のファイルを使用します。
 
 ---
@@ -142,7 +142,7 @@ A vanilla HTML/JS page, IE11 compatible, that renders the exported image map.
     -   **Links**: All links open in a new tab (`target="_blank"`).
 
 ### Usage
-1.  Place your image and `imagemap.json` (renamed to `data.json`) in the `viewer/` directory.
+1.  Place your image and `data.json` in the `viewer/` directory.
 2.  Open `index.html` in a web browser.
 3.  **Interaction**:
     -   Hover over hotspots to highlight them.
@@ -154,5 +154,5 @@ A vanilla HTML/JS page, IE11 compatible, that renders the exported image map.
 To rebuild the release files:
 1.  Go to `editor/`.
 2.  Run `npm run build`.
-3.  This updates `editor/dist` and also regenerates `../release/editor/` and `../release/viewer/`.
+3.  This writes the editor build directly to `../release/editor/` and also regenerates `../release/viewer/`.
 4.  Deploy the files under `release/`.

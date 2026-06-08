@@ -27,21 +27,66 @@ function renderImageMap(data, container) {
     tooltip.className = 'hotspot-tooltip';
     container.appendChild(tooltip);
 
+    var tooltipDelay = 350;
+    var tooltipTimer = null;
+    var activeTooltipHtml = null;
+
+    var clearTooltipTimer = function () {
+        if (tooltipTimer) {
+            clearTimeout(tooltipTimer);
+            tooltipTimer = null;
+        }
+    };
+
     // Tooltip position helper function
     var positionTooltip = function (e) {
         var rect = container.getBoundingClientRect();
         var x = e.clientX - rect.left;
         var y = e.clientY - rect.top;
+        var offset = 24;
+        var left = x + offset;
+        var top = y + offset;
+        var tooltipWidth = tooltip.offsetWidth || 250;
+        var tooltipHeight = tooltip.offsetHeight || 80;
+        var maxLeft = rect.width - tooltipWidth - 8;
+        var maxTop = rect.height - tooltipHeight - 8;
 
-        // Offset from cursor to prevent blocking mouse events
-        tooltip.style.left = (x + 15) + 'px';
-        tooltip.style.top = (y + 15) + 'px';
+        if (left > maxLeft) {
+            left = x - tooltipWidth - offset;
+        }
+
+        if (top > maxTop) {
+            top = y - tooltipHeight - offset;
+        }
+
+        tooltip.style.left = Math.max(8, left) + 'px';
+        tooltip.style.top = Math.max(8, top) + 'px';
     };
 
     var isTooltipEmpty = function (html) {
         if (!html) return true;
         var clean = html.replace(/<[^>]*>|&nbsp;/gi, '').trim();
         return clean === '';
+    };
+
+    var hideTooltip = function () {
+        clearTooltipTimer();
+        tooltip.className = 'hotspot-tooltip';
+        activeTooltipHtml = null;
+    };
+
+    var scheduleTooltip = function (html, e) {
+        if (isTooltipEmpty(html)) return;
+
+        clearTooltipTimer();
+        tooltip.className = 'hotspot-tooltip';
+        activeTooltipHtml = html;
+
+        tooltipTimer = setTimeout(function () {
+            tooltip.innerHTML = activeTooltipHtml;
+            tooltip.className = 'hotspot-tooltip visible';
+            positionTooltip(e);
+        }, tooltipDelay);
     };
 
     // 1. Render Image
@@ -87,17 +132,16 @@ function renderImageMap(data, container) {
 
         if (hotspot.props.tooltip && !isTooltipEmpty(hotspot.props.tooltip)) {
             polygon.addEventListener('mouseenter', function (e) {
-                tooltip.innerHTML = hotspot.props.tooltip;
-                tooltip.style.display = 'block';
-                positionTooltip(e);
+                scheduleTooltip(hotspot.props.tooltip, e);
             });
 
             polygon.addEventListener('mousemove', function (e) {
-                positionTooltip(e);
+                hideTooltip();
+                scheduleTooltip(hotspot.props.tooltip, e);
             });
 
             polygon.addEventListener('mouseleave', function () {
-                tooltip.style.display = 'none';
+                hideTooltip();
             });
         }
 
@@ -157,6 +201,16 @@ function createMenu(items, tooltip, container) {
     list.style.listStyle = 'none';
     list.style.margin = '0';
     list.style.padding = '0';
+    var tooltipDelay = 350;
+    var tooltipTimer = null;
+    var activeTooltipHtml = null;
+
+    var clearTooltipTimer = function () {
+        if (tooltipTimer) {
+            clearTimeout(tooltipTimer);
+            tooltipTimer = null;
+        }
+    };
 
     var isTooltipEmpty = function (html) {
         if (!html) return true;
@@ -168,8 +222,44 @@ function createMenu(items, tooltip, container) {
         var rect = container.getBoundingClientRect();
         var x = e.clientX - rect.left;
         var y = e.clientY - rect.top;
-        tooltip.style.left = (x + 15) + 'px';
-        tooltip.style.top = (y + 15) + 'px';
+        var offset = 24;
+        var left = x + offset;
+        var top = y + offset;
+        var tooltipWidth = tooltip.offsetWidth || 250;
+        var tooltipHeight = tooltip.offsetHeight || 80;
+        var maxLeft = rect.width - tooltipWidth - 8;
+        var maxTop = rect.height - tooltipHeight - 8;
+
+        if (left > maxLeft) {
+            left = x - tooltipWidth - offset;
+        }
+
+        if (top > maxTop) {
+            top = y - tooltipHeight - offset;
+        }
+
+        tooltip.style.left = Math.max(8, left) + 'px';
+        tooltip.style.top = Math.max(8, top) + 'px';
+    };
+
+    var hideTooltip = function () {
+        clearTooltipTimer();
+        tooltip.className = 'hotspot-tooltip';
+        activeTooltipHtml = null;
+    };
+
+    var scheduleTooltip = function (html, e) {
+        if (isTooltipEmpty(html)) return;
+
+        clearTooltipTimer();
+        tooltip.className = 'hotspot-tooltip';
+        activeTooltipHtml = html;
+
+        tooltipTimer = setTimeout(function () {
+            tooltip.innerHTML = activeTooltipHtml;
+            tooltip.className = 'hotspot-tooltip visible';
+            positionTooltip(e);
+        }, tooltipDelay);
     };
 
     items.forEach(function (item) {
@@ -188,17 +278,16 @@ function createMenu(items, tooltip, container) {
 
         if (item.tooltip && !isTooltipEmpty(item.tooltip)) {
             a.addEventListener('mouseenter', function (e) {
-                tooltip.innerHTML = item.tooltip;
-                tooltip.style.display = 'block';
-                positionTooltip(e);
+                scheduleTooltip(item.tooltip, e);
             });
 
             a.addEventListener('mousemove', function (e) {
-                positionTooltip(e);
+                hideTooltip();
+                scheduleTooltip(item.tooltip, e);
             });
 
             a.addEventListener('mouseleave', function () {
-                tooltip.style.display = 'none';
+                hideTooltip();
             });
         }
 

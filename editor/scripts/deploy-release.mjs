@@ -7,7 +7,6 @@ const __dirname = path.dirname(__filename);
 const editorDir = path.resolve(__dirname, '..');
 const repoRoot = path.resolve(editorDir, '..');
 
-const distDir = path.join(editorDir, 'dist');
 const viewerDir = path.join(repoRoot, 'viewer');
 const releaseDir = path.join(repoRoot, 'release');
 const releaseEditorDir = path.join(releaseDir, 'editor');
@@ -19,17 +18,16 @@ function copyDirectory(source, destination) {
   cpSync(source, destination, { recursive: true });
 }
 
-if (!existsSync(distDir)) {
-  throw new Error(`Editor build output not found: ${distDir}`);
-}
-
 if (!existsSync(viewerDir)) {
   throw new Error(`Viewer source directory not found: ${viewerDir}`);
 }
 
+if (!existsSync(releaseEditorDir)) {
+  throw new Error(`Editor build output not found: ${releaseEditorDir}`);
+}
+
 mkdirSync(releaseDir, { recursive: true });
-copyDirectory(distDir, releaseEditorDir);
 copyDirectory(viewerDir, releaseViewerDir);
 
-console.log(`Deployed editor to ${releaseEditorDir}`);
+console.log(`Editor build available at ${releaseEditorDir}`);
 console.log(`Deployed viewer to ${releaseViewerDir}`);

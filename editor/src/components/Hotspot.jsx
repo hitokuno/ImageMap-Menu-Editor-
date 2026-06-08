@@ -80,9 +80,9 @@ function Hotspot({ data, isSelected, onSelect, onUpdate, containerSize, onMouseE
                 strokeWidth="2"
                 cursor="move"
                 onMouseDown={handleMouseDown}
-                onMouseEnter={(e) => onMouseEnter && onMouseEnter(e, data.props.tooltip)}
-                onMouseMove={onMouseMove}
-                onMouseLeave={onMouseLeave}
+                onMouseEnter={(e) => onMouseEnter && onMouseEnter(e, data)}
+                onMouseMove={(e) => onMouseMove && onMouseMove(e, data)}
+                onMouseLeave={() => onMouseLeave && onMouseLeave(data)}
             />
 
             {isSelected && points.map((p, i) => (

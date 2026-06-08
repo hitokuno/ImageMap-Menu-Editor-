@@ -44,6 +44,7 @@ function Sidebar({ hotspot, onUpdate, onDelete }) {
             <div className="form-group">
                 <label>Tooltip (Rich Text)</label>
                 <RichTextEditor
+                    className="tooltip-editor"
                     value={props.tooltip || ''}
                     onChange={(value) => handleChange('tooltip', value)}
                     placeholder="Enter tooltip rich text..."
